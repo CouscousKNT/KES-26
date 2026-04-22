@@ -1,32 +1,35 @@
 import { useState, useEffect, useRef } from "react";
-import dvdIntroMp4 from "./assets/intro/dvdintro.mp4";
 import titleScreenMp4 from "./assets/intro/titlescreen.mp4";
-import videos from "./videos";
+import videos, { type Video } from "./videos";
 import NavButton from "./components/NavButton";
 import VideoCell from "./components/VideoCell";
 import EmptyCell from "./components/EmptyCell";
 
 const font = "'VCR OSD Mono', monospace";
 
-export default function DVDMenu({ onPlay }) {
+export default function DVDMenu({
+  onPlay,
+}: {
+  onPlay?: (video: (typeof videos)[number]) => void;
+}) {
   const [showIntro, setShowIntro] = useState(true);
   const [page, setPage] = useState(0);
   const [selected, setSelected] = useState(0);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
-  const outerRef = useRef(null);
-  const svgRef = useRef(null);
+  const outerRef = useRef<HTMLDivElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
 
   const VideoPerPage = isMobile ? 4 : 8;
   const totalPages = Math.ceil(videos.length / VideoPerPage);
 
-  const handlePlay = (v) => {
+  const handlePlay = (v?: (typeof videos)[number] | null) => {
     const video = v ?? videos[selected];
     if (!video) return;
     if (onPlay) onPlay(video);
     else alert(`Lecture : Titre ${video.numFilm}`);
   };
 
-  const go = (dir) => {
+  const go = (dir: number) => {
     setPage((p) => {
       const np = p + dir;
       if (np < 0 || np >= totalPages) return p;
@@ -70,7 +73,7 @@ export default function DVDMenu({ onPlay }) {
   }, [page]);
 
   useEffect(() => {
-    const handler = (e) => {
+    const handler = (e: KeyboardEvent) => {
       if (e.key === "ArrowRight") go(1);
       if (e.key === "ArrowLeft") go(-1);
       if (e.key === "Enter") handlePlay();
@@ -80,7 +83,7 @@ export default function DVDMenu({ onPlay }) {
   }, [selected, page]);
 
   const start = page * VideoPerPage;
-  const slice = videos.slice(start, start + VideoPerPage);
+  const slice: (Video | null)[] = videos.slice(start, start + VideoPerPage);
   while (slice.length < VideoPerPage) slice.push(null);
 
   const pageLabel =
