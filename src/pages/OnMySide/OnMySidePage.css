@@ -1,0 +1,15 @@
+/* ── Banner image ── */
+.cv-banner {
+  background-image: url('./img/banner.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* ── Glowing status dots ── */
+.cv-dg { background: #44dd22; box-shadow: 0 0 5px #44dd22; }
+.cv-db { background: #22aaff; box-shadow: 0 0 5px #22aaff; }
+.cv-do { background: #ffaa22; box-shadow: 0 0 5px #ffaa22; }
+.cv-dp { background: #dd44bb; box-shadow: 0 0 5px #dd44bb; }
+
+/* ── XP icon gradient ── */
+.cv-xp-icon { background: linear-gradient(135deg, #1a6fb5, #3a9fd6); }
