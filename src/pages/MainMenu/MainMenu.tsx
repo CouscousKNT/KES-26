@@ -16,10 +16,12 @@ import ContactPage from "../Contact/ContactPage";
 import OnMySidePage from "../OnMySide/OnMySidePage";
 import MusicPlayer from "../MusicPlayer/MusicPlayer";
 import DVDMenu from "../DVDPlayer/DVDMenu";
+import { type Video } from "../DVDPlayer/videos";
 import ClockIcon from "../../assets/icons/ClockIcon";
 import SpeakerIcon from "../../assets/icons/SpeakerIcon";
 import BatteryIcon from "../../assets/icons/BatteryIcon";
 import { useIsMobile } from "../../hooks/useIsMobile";
+import ReactPlayer from "react-player";
 
 const styles = `
   @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
@@ -105,14 +107,45 @@ function StarIcon() {
   );
 }
 
+// ─── Clock ───────────────────────────────────────────────────────────────────
+
+function LiveClock() {
+  const [clock, setClock] = useState({ time: "", date: "" });
+
+  useEffect(() => {
+    function tick() {
+      const now = new Date();
+      const h = String(now.getHours()).padStart(2, "0");
+      const m = String(now.getMinutes()).padStart(2, "0");
+      const d = String(now.getDate()).padStart(2, "0");
+      const mo = String(now.getMonth() + 1).padStart(2, "0");
+      const y = now.getFullYear();
+      setClock({ time: `${h}:${m}`, date: `${d}/${mo}/${y}` });
+    }
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <>
+      <div className="flex items-center gap-[3px]">
+        <ClockIcon size={13} />
+        <span className="tracking-[0.125em] opacity-90">{clock.time}</span>
+      </div>
+      <span className="opacity-60">{clock.date}</span>
+    </>
+  );
+}
+
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export default function MainMenu() {
-  const [clock, setClock] = useState({ time: "", date: "" });
   const [muted, setMuted] = useState(false);
   const [isOnMySideOpen, setIsOnMySideOpen] = useState(false);
   const [isMusicPlayerOpen, setIsMusicPlayerOpen] = useState(false);
   const [isDVDPlayerOpen, setIsDVDPlayerOpen] = useState(false);
+  const [playingVideo, setPlayingVideo] = useState<Video | null>(null);
   const [isContactOpen, setIsContactOpen] = useState(false);
   const isMobile = useIsMobile();
   // ─── Data ────────────────────────────────────────────────────────────────────
@@ -170,22 +203,6 @@ export default function MainMenu() {
     },
   ];
 
-  // Live clock
-  useEffect(() => {
-    function tick() {
-      const now = new Date();
-      const h = String(now.getHours()).padStart(2, "0");
-      const m = String(now.getMinutes()).padStart(2, "0");
-      const d = String(now.getDate()).padStart(2, "0");
-      const mo = String(now.getMonth() + 1).padStart(2, "0");
-      const y = now.getFullYear();
-      setClock({ time: `${h}:${m}`, date: `${d}/${mo}/${y}` });
-    }
-    tick();
-    const id = setInterval(tick, 1000);
-    return () => clearInterval(id);
-  }, []);
-
   return (
     <>
       <style>{styles}</style>
@@ -213,13 +230,7 @@ export default function MainMenu() {
           <span className="opacity-90">Ousmane</span>
 
           <div className="flex items-center gap-[15px] ml-auto">
-            <div className="flex items-center gap-[3px]">
-              <ClockIcon size={13} />
-              <span className="tracking-[0.125em] opacity-90">
-                {clock.time}
-              </span>
-            </div>
-            <span className="opacity-60">{clock.date}</span>
+            <LiveClock />
             <button
               onClick={() => {
                 const next = !muted;
@@ -308,12 +319,37 @@ export default function MainMenu() {
       </KES26Modal>
       <KES26Modal
         open={isDVDPlayerOpen}
-        onClose={() => setIsDVDPlayerOpen(false)}
+        onClose={() => {
+          setIsDVDPlayerOpen(false);
+          setPlayingVideo(null);
+        }}
         width="768px"
         height="640px"
         fullscreen={isMobile}
       >
-        <DVDMenu />
+        {playingVideo ? (
+          <div className="relative w-full h-full bg-black flex flex-col">
+            <button
+              onClick={() => setPlayingVideo(null)}
+              className="absolute top-2 left-2 z-10 text-white text-xs bg-black/50 px-3 py-1 rounded hover:bg-black/80"
+            >
+              [ ← Retour ]
+            </button>
+            <ReactPlayer
+              src={playingVideo.urlFilm}
+              playing
+              controls
+              width="100%"
+              height="100%"
+            />
+          </div>
+        ) : (
+          <DVDMenu
+            onPlay={(video) => {
+              if (video.urlFilm) setPlayingVideo(video);
+            }}
+          />
+        )}
       </KES26Modal>
     </>
   );

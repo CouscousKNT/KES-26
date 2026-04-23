@@ -1,4 +1,7 @@
 import imgLaBonneExpression from "./assets/img/la_bonne_expression.webp";
+import imgCinquantePourcent from "./assets/img/cinquante_pourcent.webp"
+import imgCDH from "./assets/img/cdh.webp"
+import imgLaGrandeEchapee from "./assets/img/la_grande_echapee.webp"
 
 export interface Video {
   numFilm: string;
@@ -6,37 +9,42 @@ export interface Video {
   dateFilm: string;
   descriptionFilm: string;
   imageFilm: string | null;
+  urlFilm?: string;
 }
 
 const videos: Video[] = [
   {
     numFilm: "01",
-    titleFilm: "La bonne expression",
+    titleFilm: "LA BONNE EXPRESSION",
     dateFilm: "1/1/2000",
     descriptionFilm:
       "Film sélectionné parmis les 10 lauréats du concours 'Filme ton quartier'. ",
     imageFilm: imgLaBonneExpression,
+    urlFilm: import.meta.env.VITE_VIDEO_01
   },
   {
     numFilm: "02",
-    titleFilm: "IN2",
+    titleFilm: "50%",
     dateFilm: "1/ 1/2000",
-    descriptionFilm: "12:00AM",
-    imageFilm: null,
+    descriptionFilm: "Deuxième participation au concours 'Filme ton quartier'.",
+    imageFilm: imgCinquantePourcent,
+    urlFilm: import.meta.env.VITE_VIDEO_02,
   },
   {
     numFilm: "03",
-    titleFilm: "IN1",
+    titleFilm: "LA GRANDE ECHAPEE",
     dateFilm: "1/ 1/2000",
-    descriptionFilm: "12:00AM",
-    imageFilm: null,
+    descriptionFilm: "Cadrage et Post-Production pour Moluki",
+    imageFilm: imgLaGrandeEchapee,
+    urlFilm: import.meta.env.VITE_VIDEO_03
   },
   {
     numFilm: "04",
-    titleFilm: "IN1",
-    dateFilm: "1/ 1/2000",
-    descriptionFilm: "12:00AM",
-    imageFilm: null,
+    titleFilm: "CDH 2025",
+    dateFilm: "",
+    descriptionFilm: "Congrès d'Hiver 2025 avec Miage PLUS, au Domaine de Peyreguillot.",
+    imageFilm: imgCDH,
+    urlFilm: import.meta.env.VITE_VIDEO_04
   },
   {
     numFilm: "05",
@@ -72,6 +80,7 @@ const videos: Video[] = [
     dateFilm: "2/14/2000",
     descriptionFilm: "08:30AM",
     imageFilm: null,
+    urlFilm: "https://vz-94180d5e-480.b-cdn.net/9e1f336b-ee8b-445a-ba92-12aa1c605a40/playlist.m3u8"
   },
   {
     numFilm: "10",
@@ -79,20 +88,7 @@ const videos: Video[] = [
     dateFilm: "3/ 5/2000",
     descriptionFilm: "09:00PM",
     imageFilm: null,
-  },
-  {
-    numFilm: "11",
-    titleFilm: "IN1",
-    dateFilm: "4/20/2000",
-    descriptionFilm: "03:15PM",
-    imageFilm: null,
-  },
-  {
-    numFilm: "12",
-    titleFilm: "IN2",
-    dateFilm: "5/ 1/2000",
-    descriptionFilm: "07:45PM",
-    imageFilm: null,
+    urlFilm: "https://vz-94180d5e-480.b-cdn.net/9e1f336b-ee8b-445a-ba92-12aa1c605a40/playlist.m3u8"
   },
 ];
 

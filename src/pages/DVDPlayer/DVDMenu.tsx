@@ -12,24 +12,26 @@ export default function DVDMenu({
 }: {
   onPlay?: (video: (typeof videos)[number]) => void;
 }) {
-  const [showIntro, setShowIntro] = useState(true);
-  const [page, setPage] = useState(0);
-  const [selected, setSelected] = useState(0);
+  // VARIABLE DE FONCTIONNEMENT DU MENU
   const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
-  const outerRef = useRef<HTMLDivElement>(null);
-  const svgRef = useRef<SVGSVGElement>(null);
-
+  const [page, setPage] = useState(0);
+  const [showIntro, setShowIntro] = useState(true);
+  const [selectedVideo, setSelectedVideo] = useState(0);
   const VideoPerPage = isMobile ? 4 : 8;
   const totalPages = Math.ceil(videos.length / VideoPerPage);
 
+  // VARIABLE DE CONSTRUCTION DE LA GRILLE ESTHETIQUE
+  const outerRef = useRef<HTMLDivElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
+
   const handlePlay = (v?: (typeof videos)[number] | null) => {
-    const video = v ?? videos[selected];
+    const video = v ?? videos[selectedVideo];
     if (!video) return;
     if (onPlay) onPlay(video);
-    else alert(`Lecture : Titre ${video.numFilm}`);
   };
 
-  const go = (dir: number) => {
+  // FONCTION DE CHANGEMENT DE PAGE
+  const changePage = (dir: number) => {
     setPage((p) => {
       const np = p + dir;
       if (np < 0 || np >= totalPages) return p;
@@ -37,6 +39,7 @@ export default function DVDMenu({
     });
   };
 
+  // FONCTION DE CONSTRUCTION DE LA GRILLE ESTHETIQUE
   const drawGrid = () => {
     const el = outerRef.current;
     const svg = svgRef.current;
@@ -53,6 +56,7 @@ export default function DVDMenu({
     svg.innerHTML = lines;
   };
 
+  // CONSTRUCTION DE LA GRILLE ESTHETIQUE APRES LA VIDEO D'INTRODUCTION
   useEffect(() => {
     if (showIntro) return;
     drawGrid();
@@ -68,29 +72,41 @@ export default function DVDMenu({
     return () => ro.disconnect();
   }, [showIntro]);
 
+  // RE-CONSTRUCTION DE LA GRILLE AU CHANGEMENT DE PAGE
   useEffect(() => {
     setTimeout(drawGrid, 0);
   }, [page]);
 
+  // COMMANDE CLAVIER :
+  //   - FLECHE DROITE / FLECHE GAUCHE : CHANGEMENT DE PAGE
+  //   - ENTRER : LECTURE DE LA VIDEO
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight") go(1);
-      if (e.key === "ArrowLeft") go(-1);
+      if (e.key === "ArrowRight") changePage(1);
+      if (e.key === "ArrowLeft") changePage(-1);
       if (e.key === "Enter") handlePlay();
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [selected, page]);
+  }, [selectedVideo, page]);
 
-  const start = page * VideoPerPage;
-  const slice: (Video | null)[] = videos.slice(start, start + VideoPerPage);
-  while (slice.length < VideoPerPage) slice.push(null);
+  // CALCUL DE L'INDEX DE DEPART POUR DECOUPAGE
+  const pageStartIndex = page * VideoPerPage;
 
+  // TABLEAU DE VIDEO POUR UNE PAGE
+  const currentPageVideos: (Video | null)[] = videos.slice(
+    pageStartIndex,
+    pageStartIndex + VideoPerPage,
+  );
+  while (currentPageVideos.length < VideoPerPage) currentPageVideos.push(null);
+
+  // FORMATAGE AFFICHAGE DE LA PAGE COURANTE
   const pageLabel =
     String(page + 1).padStart(2, "0") +
     "/" +
     String(totalPages).padStart(2, "0");
 
+  // AFFICHAGE VIDEO D'INTROCUTION
   if (showIntro) {
     return (
       <div className="absolute inset-0 bg-[#01186c] overflow-hidden">
@@ -112,6 +128,7 @@ export default function DVDMenu({
         .body{ background: #01186c; }
         `}
       </style>
+
       <div
         className="bg-[#01186c] p-4 flex items-center justify-center w-full min-h-full box-border"
         style={{ fontFamily: font }}
@@ -120,7 +137,7 @@ export default function DVDMenu({
           ref={outerRef}
           className="relative border-[3px] border-[#1e3060] rounded-[10px] px-[14px] pt-[10px] w-full max-w-[1200px] mx-auto"
         >
-          {/* Grille de fond */}
+          {/* GRILLE DE FOND ESTHETIQUE */}
           <div className="absolute inset-0 pointer-events-none z-0">
             <svg
               ref={svgRef}
@@ -129,23 +146,22 @@ export default function DVDMenu({
             />
           </div>
 
-          {/* Flèches latérales */}
+          {/* FLECHE DE CHANGEMENT DE PAGE */}
           <span
-            onClick={() => go(-1)}
+            onClick={() => changePage(-1)}
             className="absolute top-1/2 -translate-y-1/2 -left-0.5 text-[#6a8acc] text-[18px] cursor-pointer p-1 select-none z-[2]"
           >
             &#9664;
           </span>
           <span
-            onClick={() => go(1)}
+            onClick={() => changePage(1)}
             className="absolute top-1/2 -translate-y-1/2 -right-0.5 text-[#6a8acc] text-[18px] cursor-pointer p-1 select-none z-[2]"
           >
             &#9654;
           </span>
 
-          {/* Contenu */}
           <div className="relative z-[1]">
-            {/* Compteur de page */}
+            {/* COMPTEUR DE PAGE */}
             <div className="flex justify-end mb-2">
               <span
                 className="text-white text-[15px] tracking-[1px]"
@@ -155,42 +171,52 @@ export default function DVDMenu({
               </span>
             </div>
 
-            {/* Grille de vidéos */}
+            {/* CONSTRUCTION DE LA GRILLE DE VIDEO */}
             <div
               className={`grid ${isMobile ? "grid-cols-1" : "grid-cols-2"} gap-[6px] mb-[10px]`}
             >
-              {slice.map((v, i) => {
-                const gi = start + i;
-                return v ? (
+              {currentPageVideos.map((video, index) => {
+                // INDEX GLOBAL ( la variable "index" correspond à celle de la page courante)
+                const globalIndex = pageStartIndex + index;
+                return video ? (
                   <VideoCell
-                    key={gi}
-                    video={v}
-                    selected={gi === selected}
+                    key={globalIndex}
+                    video={video}
+                    selected={globalIndex === selectedVideo}
                     font={font}
-                    onClick={() => setSelected(gi)}
+                    onClick={() => setSelectedVideo(globalIndex)}
                     onDoubleClick={() => {
-                      setSelected(gi);
-                      handlePlay(v);
+                      setSelectedVideo(globalIndex);
+                      handlePlay(video);
                     }}
                   />
                 ) : (
-                  <EmptyCell key={i} />
+                  <EmptyCell key={index} />
                 );
               })}
             </div>
           </div>
 
-          {/* Boutons de navigation — sticky en bas de la modal */}
+          {/* BOUTONS ACTIONS */}
           <div className="sticky bottom-0 z-[2] flex gap-[6px] bg-[#0a3d89]/40 rounded-b-[10px] border-[#1e3060] -mx-[14px] px-[14px] py-[12px]">
-            <NavButton font={font} onClick={() => go(-1)} disabled={page === 0}>
+            <NavButton
+              font={font}
+              onClick={() => changePage(-1)}
+              disabled={page === 0}
+            >
               Previous
             </NavButton>
-            <NavButton font={font} onClick={handlePlay}>
+            <NavButton
+              font={font}
+              onClick={() => {
+                handlePlay(videos[selectedVideo]);
+              }}
+            >
               Play
             </NavButton>
             <NavButton
               font={font}
-              onClick={() => go(1)}
+              onClick={() => changePage(1)}
               disabled={page >= totalPages - 1}
             >
               Next
