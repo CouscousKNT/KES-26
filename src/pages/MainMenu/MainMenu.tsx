@@ -333,7 +333,7 @@ export default function MainMenu() {
               onClick={() => setPlayingVideo(null)}
               className="absolute top-2 left-2 z-10 text-white text-xs bg-black/50 px-3 py-1 rounded hover:bg-black/80"
             >
-              ← Retour
+              [ ← Retour ]
             </button>
             <ReactPlayer
               src={playingVideo.urlFilm}
@@ -344,7 +344,11 @@ export default function MainMenu() {
             />
           </div>
         ) : (
-          <DVDMenu onPlay={(video) => setPlayingVideo(video)} />
+          <DVDMenu
+            onPlay={(video) => {
+              if (video.urlFilm) setPlayingVideo(video);
+            }}
+          />
         )}
       </KES26Modal>
     </>

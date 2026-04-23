@@ -4,7 +4,6 @@ import videos, { type Video } from "./videos";
 import NavButton from "./components/NavButton";
 import VideoCell from "./components/VideoCell";
 import EmptyCell from "./components/EmptyCell";
-import ReactPlayer from "react-player";
 
 const font = "'VCR OSD Mono', monospace";
 
