@@ -12,6 +12,7 @@ import ProgressBarSection from "./sections/ProgressBarSection";
 import TrackInfoSection from "./sections/TrackInfoSection";
 
 export default function MusicPlayer() {
+  // VARIABLE DE FONCTIONNEMENT DU LECTEUR DE MUSIQUE
   const [currentIdx, setCurrentIdx] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
@@ -32,12 +33,12 @@ export default function MusicPlayer() {
     scrollOffset + 42,
   );
 
-  // Keep currentIdxRef in sync for use inside the ended handler
+  // MISE A JOUR DE currentIndex.current A CHAQUE FOIS QUE currentIndex CHANGE
   useEffect(() => {
     currentIdxRef.current = currentIdx;
   }, [currentIdx]);
 
-  // Init audio element once
+  // CREATION DE L'AUDIO, RECUPERATION ET MAJ DE LA DUREE ET
   useEffect(() => {
     const audio = new Audio();
     audio.src = tracks[0].src;
@@ -58,7 +59,7 @@ export default function MusicPlayer() {
     };
   }, []);
 
-  // Re-register ended handler when shuffle/repeat change so closures stay fresh
+  // ACTION A LA FIN DE LA MUSIQUE (REPETER / ALEATOIRE OU MORCEAU SUIVANT)
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -72,7 +73,6 @@ export default function MusicPlayer() {
           ? Math.floor(Math.random() * tracks.length)
           : (currentIdxRef.current + 1) % tracks.length;
         setCurrentIdx(nextIdx);
-        // isPlaying stays true; the play/pause effect will fire
       }
     };
 
@@ -80,7 +80,7 @@ export default function MusicPlayer() {
     return () => audio.removeEventListener("ended", onEnded);
   }, [repeat, shuffle]);
 
-  // Load new src when track changes
+  // CHANGE LE SRC DE L'AUDIO LORSQUE L'INDEX CHANGE
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -90,7 +90,7 @@ export default function MusicPlayer() {
     setTrackDuration(0);
   }, [currentIdx]);
 
-  // Sync play/pause with audio — fires on both isPlaying and currentIdx changes
+  // PLAY / PAUSE
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -101,12 +101,12 @@ export default function MusicPlayer() {
     }
   }, [isPlaying, currentIdx]);
 
-  // Sync volume with audio
+  // CONVERSION DU VOLUME VERS UN NOMBRE COMPRIS ENTRE 0 ET 1
   useEffect(() => {
     if (audioRef.current) audioRef.current.volume = volume / 100;
   }, [volume]);
 
-  // Scrolling ticker
+  // SCROLLING TICKER
   useEffect(() => {
     setScrollOffset(0);
     if (scrollRef.current) clearInterval(scrollRef.current);
@@ -120,21 +120,25 @@ export default function MusicPlayer() {
     };
   }, [isPlaying, track.id, titleStr.length]);
 
+  // MORCEAU PRECEDENT
   const prev = useCallback((): void => {
     setCurrentIdx((i) => (i - 1 + tracks.length) % tracks.length);
   }, []);
 
+  // MORCEAU SUIVANT
   const next = useCallback((): void => {
     if (shuffle) setCurrentIdx(Math.floor(Math.random() * tracks.length));
     else setCurrentIdx((i) => (i + 1) % tracks.length);
   }, [shuffle]);
 
+  // ARRET DU MORCEAU, REMISE DE LA PROGRESS BAR A 0
   const stop = (): void => {
     setIsPlaying(false);
     setProgress(0);
     if (audioRef.current) audioRef.current.currentTime = 0;
   };
 
+  // DEPLACEMENT DANS LE MORCEAU DEPUIS LA PROGRESS BAR
   const handleProgressClick = (e: MouseEvent<HTMLDivElement>): void => {
     if (!audioRef.current || !trackDuration) return;
     const rect = e.currentTarget.getBoundingClientRect();
