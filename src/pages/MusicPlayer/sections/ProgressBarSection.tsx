@@ -51,7 +51,6 @@ export default function ProgressBarSection({
             position: "relative",
           }}
         >
-          {/* Playhead marker */}
           <div
             style={{
               position: "absolute",

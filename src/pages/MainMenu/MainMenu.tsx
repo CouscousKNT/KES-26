@@ -15,6 +15,7 @@ import KES26Modal from "../../components/KES26Modal/KES26Modal";
 import ContactPage from "../Contact/ContactPage";
 import OnMySidePage from "../OnMySide/OnMySidePage";
 import MusicPlayer from "../MusicPlayer/MusicPlayer";
+import { useMusicPlayer } from "../MusicPlayer/hooks/useMusicPlayer";
 import DVDMenu from "../DVDPlayer/DVDMenu";
 import { type Video } from "../DVDPlayer/videos";
 import ClockIcon from "../../assets/icons/ClockIcon";
@@ -141,7 +142,7 @@ function LiveClock() {
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export default function MainMenu() {
-  const [muted, setMuted] = useState(false);
+  const musicPlayer = useMusicPlayer();
   const [isOnMySideOpen, setIsOnMySideOpen] = useState(false);
   const [isMusicPlayerOpen, setIsMusicPlayerOpen] = useState(false);
   const [isDVDPlayerOpen, setIsDVDPlayerOpen] = useState(false);
@@ -232,17 +233,10 @@ export default function MainMenu() {
           <div className="flex items-center gap-[15px] ml-auto">
             <LiveClock />
             <button
-              onClick={() => {
-                const next = !muted;
-                setMuted(next);
-                document.querySelectorAll("audio, video").forEach((el) => {
-                  (el as HTMLMediaElement).muted = next;
-                });
-              }}
+              onClick={() => musicPlayer.setIsPlaying((p) => !p)}
               className="bg-transparent border-none cursor-pointer p-0 flex items-center"
-              aria-label={muted ? "Activer le son" : "Couper le son"}
             >
-              <SpeakerIcon size={15} muted={muted} />
+              <SpeakerIcon size={15} muted={!musicPlayer.isPlaying} />
             </button>
             <BatteryIcon />
           </div>
@@ -306,7 +300,7 @@ export default function MainMenu() {
         height="500px"
         fullscreen={isMobile}
       >
-        <MusicPlayer />
+        <MusicPlayer {...musicPlayer} />
       </KES26Modal>
       <KES26Modal
         open={isContactOpen}
