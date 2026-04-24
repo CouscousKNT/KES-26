@@ -143,7 +143,6 @@ function LiveClock() {
 
 export default function MainMenu() {
   const musicPlayer = useMusicPlayer();
-  const [muted, setMuted] = useState(false);
   const [isOnMySideOpen, setIsOnMySideOpen] = useState(false);
   const [isMusicPlayerOpen, setIsMusicPlayerOpen] = useState(false);
   const [isDVDPlayerOpen, setIsDVDPlayerOpen] = useState(false);
