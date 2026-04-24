@@ -236,9 +236,6 @@ export default function MainMenu() {
             <button
               onClick={() => musicPlayer.setIsPlaying((p) => !p)}
               className="bg-transparent border-none cursor-pointer p-0 flex items-center"
-              aria-label={
-                musicPlayer.isPlaying ? "Mettre en pause" : "Lancer la musique"
-              }
             >
               <SpeakerIcon size={15} muted={!musicPlayer.isPlaying} />
             </button>
