@@ -1,5 +1,4 @@
 import type { MusicPlayerControls } from "./hooks/useMusicPlayer";
-import SpeakerIcon from "../../assets/icons/SpeakerIcon";
 import ControlSection from "./sections/ControlSection";
 import PlaylistSection from "./sections/PlaylistSection";
 import ProgressBarSection from "./sections/ProgressBarSection";
