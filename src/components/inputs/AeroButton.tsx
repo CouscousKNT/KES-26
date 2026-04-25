@@ -1,5 +1,3 @@
-const pixelFont = { fontFamily: "'VT323', 'Courier New', monospace" };
-
 const styles = {
   green: {
     background: "linear-gradient(180deg, #328840 0%, #8dd78f 100%)",
