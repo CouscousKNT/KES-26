@@ -9,7 +9,7 @@ import cdWebp from "./assets/items/CD-ITEM.webp";
 import cdGif from "./assets/items/CD-ITEM.gif";
 import starWebp from "./assets/items/STAR-ITEM.webp";
 import starGif from "./assets/items/STAR-ITEM.gif";
-import platformImg from "./assets/items/PLATFORM.png";
+import platformImg from "./assets/items/plateformCompressed.png";
 import bgLoop from "./assets/BGLOOP.gif";
 import KES26Modal from "../../components/KES26Modal/KES26Modal";
 import ContactPage from "../Contact/ContactPage";
@@ -280,8 +280,8 @@ export default function MainMenu() {
         </div>
 
         {/* Navigation hint */}
-        <p className="dvd-nav-hint absolute bottom-[18px] left-1/2 -translate-x-1/2 text-[rgba(200,230,255,0.6)] text-[10px] tracking-[0.15em] text-center">
-          KES-26 - Cliquez sur une icône pour explorer mon univers numérique
+        <p className="dvd-nav-hint absolute bottom-[12%] left-1/2 -translate-x-1/2 text-[#304f68] text-[10px] tracking-[0.15em] text-center">
+          KES-26 - Portfolio de Ousmane Kanoute
         </p>
       </div>
       <KES26Modal

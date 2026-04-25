@@ -1,22 +1,25 @@
 import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { AeroButton } from "../../components/inputs/AeroButton";
-import titleScreenImg from "./assets/img/titleScreen3.png";
-import foreground from "./assets/img/wave.png";
+import ModalButton from "../../components/KES26Modal/inputs/ModalButton";
+import titleScreenImg from "./assets/img/titleScreenImgCompressed.webp";
+import foreground from "./assets/img/waveCompressed.webp";
 import introVideo from "./assets/intro/titleScreenAnimationV2.mp4";
 import KES26Modal from "../../components/KES26Modal/KES26Modal";
 import { useIsMobile } from "../../hooks/useIsMobile";
 import { useMusicPlayerContext } from "../../context/MusicPlayerContext";
+import SpeakerIcon from "../../assets/icons/SpeakerIcon";
 
 export default function TitleScreen() {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const { setIsPlaying } = useMusicPlayerContext();
   const [showIntro, setShowIntro] = useState(false);
+  const [muted, setMuted] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   function handleStart() {
-    setIsPlaying(true);
+    if (!muted) setIsPlaying(true);
     if (isMobile) {
       navigate("/home");
     } else {
@@ -30,6 +33,21 @@ export default function TitleScreen() {
 
   const content = (
     <div className="relative w-full h-full bg-[_#e3eced] overflow-hidden flex flex-col items-center">
+      <div
+        style={{
+          position: "absolute",
+          top: !isMobile ? "10%" : "3%",
+          right: !isMobile ? "10%" : "5%",
+        }}
+      >
+        <ModalButton color="blue" onClick={() => setMuted((m) => !m)}>
+          <SpeakerIcon
+            muted={muted}
+            size={isMobile ? 30 : 25}
+            color="#1c4a8a"
+          />
+        </ModalButton>
+      </div>
       <img
         className="z-5 relative top-[12%] w-[50vh] sm:w-[80vh] h-auto"
         src={titleScreenImg}
@@ -87,7 +105,9 @@ export default function TitleScreen() {
   return (
     <>
       {isMobile ? (
-        <KES26Modal fullscreen>{content}</KES26Modal>
+        <KES26Modal closable={false} fullscreen>
+          {content}
+        </KES26Modal>
       ) : (
         <div className="w-screen h-screen">{content}</div>
       )}
