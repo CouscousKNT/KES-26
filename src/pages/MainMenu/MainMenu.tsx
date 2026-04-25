@@ -15,7 +15,7 @@ import KES26Modal from "../../components/KES26Modal/KES26Modal";
 import ContactPage from "../Contact/ContactPage";
 import OnMySidePage from "../OnMySide/OnMySidePage";
 import MusicPlayer from "../MusicPlayer/MusicPlayer";
-import { useMusicPlayer } from "../MusicPlayer/hooks/useMusicPlayer";
+import { useMusicPlayerContext } from "../../context/MusicPlayerContext";
 import DVDMenu from "../DVDPlayer/DVDMenu";
 import { type Video } from "../DVDPlayer/videos";
 import ClockIcon from "../../assets/icons/ClockIcon";
@@ -142,7 +142,7 @@ function LiveClock() {
 // ─── Component ───────────────────────────────────────────────────────────────
 
 export default function MainMenu() {
-  const musicPlayer = useMusicPlayer();
+  const musicPlayer = useMusicPlayerContext();
   const [isOnMySideOpen, setIsOnMySideOpen] = useState(false);
   const [isMusicPlayerOpen, setIsMusicPlayerOpen] = useState(false);
   const [isDVDPlayerOpen, setIsDVDPlayerOpen] = useState(false);

@@ -64,7 +64,7 @@ export const KES26Modal: React.FC<KES26ModalProps> = ({
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-0 z-50 pointer-events-none">
+    <div className="fixed inset-0 z-15 pointer-events-none">
       {/* Resize container — positions are runtime-computed, must stay inline */}
       <div
         style={
