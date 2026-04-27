@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { AeroButton } from "../../components/inputs/AeroButton";
 import ModalButton from "../../components/KES26Modal/inputs/ModalButton";
