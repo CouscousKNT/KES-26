@@ -38,7 +38,9 @@ function LiveClock() {
 export default function Header() {
   const isMobile = useIsMobile();
   const musicPlayer = useMusicPlayerContext();
-
+  useEffect(() => {
+    console.log("Mute a changé, sa nouvelle valeur est :", musicPlayer.mute);
+  }, [musicPlayer.mute]);
   return (
     <>
       <div
@@ -56,10 +58,12 @@ export default function Header() {
         <div className="flex items-center gap-[15px] ml-auto">
           <LiveClock />
           <button
-            onClick={() => musicPlayer.setIsPlaying((p) => !p)}
+            onClick={() => {
+              musicPlayer.setMute((p) => !p);
+            }}
             className="bg-transparent border-none cursor-pointer p-0 flex items-center"
           >
-            <SpeakerIcon size={15} muted={!musicPlayer.isPlaying} />
+            <SpeakerIcon size={15} muted={musicPlayer.mute} />
           </button>
           <BatteryIcon />
         </div>

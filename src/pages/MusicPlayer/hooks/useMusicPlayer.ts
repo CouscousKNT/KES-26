@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback, type MouseEvent } from "react
 import { tracks } from "../tracks";
 
 export function useMusicPlayer() {
+  const [mute, setMute] = useState<boolean>(false);
   const [currentIdx, setCurrentIdx] = useState<number>(0);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
@@ -87,6 +88,10 @@ export function useMusicPlayer() {
     }
   }, [isPlaying, currentIdx]);
 
+  useEffect(() => {
+  if (audioRef.current) audioRef.current.muted = mute;
+}, [mute]);
+
   // CONVERSION DU VOLUME VERS UN NOMBRE COMPRIS ENTRE 0 ET 1
   useEffect(() => {
     if (audioRef.current) audioRef.current.volume = volume / 100;
@@ -134,6 +139,7 @@ export function useMusicPlayer() {
   };
 
   return {
+    mute, setMute,
     currentIdx, setCurrentIdx,
     isPlaying, setIsPlaying,
     progress,

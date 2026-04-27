@@ -13,13 +13,12 @@ import SpeakerIcon from "../../assets/icons/SpeakerIcon";
 export default function TitleScreen() {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
-  const { setIsPlaying } = useMusicPlayerContext();
+  const musicPlayer = useMusicPlayerContext();
   const [showIntro, setShowIntro] = useState(false);
-  const [muted, setMuted] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   function handleStart() {
-    if (!muted) setIsPlaying(true);
+    if (!musicPlayer.mute) musicPlayer.setIsPlaying(true);
     if (isMobile) {
       navigate("/home");
     } else {
@@ -40,9 +39,14 @@ export default function TitleScreen() {
           right: !isMobile ? "10%" : "5%",
         }}
       >
-        <ModalButton color="blue" onClick={() => setMuted((m) => !m)}>
+        <ModalButton
+          color="blue"
+          onClick={() => {
+            musicPlayer.setMute((m) => !m);
+          }}
+        >
           <SpeakerIcon
-            muted={muted}
+            muted={musicPlayer.mute}
             size={isMobile ? 30 : 25}
             color="#1c4a8a"
           />
