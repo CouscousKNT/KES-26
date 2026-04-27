@@ -324,7 +324,10 @@ export default function MainMenu() {
         {playingVideo ? (
           <div className="relative w-full h-full bg-black flex flex-col">
             <button
-              onClick={() => setPlayingVideo(null)}
+              onClick={() => {
+                setPlayingVideo(null);
+                musicPlayer.setIsPlaying(true);
+              }}
               className="absolute top-2 left-2 z-10 text-white text-xs bg-black/50 px-3 py-1 rounded hover:bg-black/80"
             >
               [ ← Retour ]
@@ -340,7 +343,10 @@ export default function MainMenu() {
         ) : (
           <DVDMenu
             onPlay={(video) => {
-              if (video.urlFilm) setPlayingVideo(video);
+              if (video.urlFilm) {
+                setPlayingVideo(video);
+                musicPlayer.setIsPlaying(false);
+              }
             }}
           />
         )}
