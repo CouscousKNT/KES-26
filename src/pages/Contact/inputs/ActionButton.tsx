@@ -5,8 +5,6 @@ interface ActionButtonProps {
 
 const pixelFont = { fontFamily: "'VT323', 'Courier New', monospace" };
 
-const iconStyle = { filter: "drop-shadow(0 1px 0 rgba(255,255,255,0.6))" };
-
 const styles = {
   send: {
     background: "linear-gradient(180deg, #328840 0%, #8dd78f 100%)",
@@ -63,7 +61,7 @@ export function ActionButton({ buttonType, onClick }: ActionButtonProps) {
           <>
             <span
               className="inline-block text-base"
-              style={iconStyle}
+              style={{ filter: "drop-shadow(0 1px 0 rgba(255,255,255,0.6))" }}
               aria-hidden="true"
             >
               ✉
@@ -71,7 +69,7 @@ export function ActionButton({ buttonType, onClick }: ActionButtonProps) {
             <span>Envoyer</span>
             <span
               className="inline-block text-base"
-              style={iconStyle}
+              style={{ filter: "drop-shadow(0 1px 0 rgba(255,255,255,0.6))" }}
               aria-hidden="true"
             >
               ➤

@@ -60,6 +60,7 @@ export default function Header() {
           <button
             onClick={() => {
               musicPlayer.setMute((p) => !p);
+              musicPlayer.setIsPlaying(true);
             }}
             className="bg-transparent border-none cursor-pointer p-0 flex items-center"
           >
