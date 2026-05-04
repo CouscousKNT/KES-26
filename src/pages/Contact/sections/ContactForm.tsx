@@ -1,12 +1,12 @@
 interface ContactFormProps {
   recipient: string;
   subject: string;
-  body: string;
+  content: string;
   dateStamp: string;
   maxSubjectLength: number;
-  maxBodyLength: number;
+  maxContentLength: number;
   onSubjectChange: (value: string) => void;
-  onBodyChange: (value: string) => void;
+  onContentChange: (value: string) => void;
 }
 
 const pixelFont = { fontFamily: "'VT323', 'Courier New', monospace" };
@@ -14,24 +14,39 @@ const displayFont = { fontFamily: "'Orbitron', sans-serif" };
 
 const CONTACT_FORM_STYLE = ` 
 /* Enveloppe icône */
-.riize-envelope::before {
+.envelope::before {
   content: '';
   position: absolute;
   inset: 0;
   background:
     linear-gradient(135deg, transparent 45%, rgba(30,80,160,0.6) 46%, rgba(30,80,160,0.6) 47%, transparent 48%),
     linear-gradient(225deg, transparent 45%, rgba(30,80,160,0.6) 46%, rgba(30,80,160,0.6) 47%, transparent 48%);
-}`;
+}
+
+/* Placeholder textarea */
+.textarea::placeholder { color: #8ba3c8; font-style: italic; }
+    
+/* Reflet papier message */
+.textarea-container::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 30%;
+  background: linear-gradient(180deg, rgba(180,220,255,0.15) 0%, rgba(180,220,255,0) 100%);
+  pointer-events: none;
+}    
+
+`;
 
 export function ContactForm({
   recipient,
   subject,
-  body,
+  content,
   dateStamp,
   maxSubjectLength,
-  maxBodyLength,
+  maxContentLength,
   onSubjectChange,
-  onBodyChange,
+  onContentChange,
 }: ContactFormProps) {
   return (
     <>
@@ -43,7 +58,7 @@ export function ContactForm({
         aria-label="Fil d'ariane"
       >
         <div
-          className="riize-envelope relative h-6 w-8 flex-shrink-0 rounded-[3px] border-[1.5px]"
+          className="envelope relative h-6 w-8 flex-shrink-0 rounded-[3px] border-[1.5px]"
           style={{
             borderColor: "#1c4a8a",
             background: "linear-gradient(180deg, #ffffff 0%, #c8dff5 100%)",
@@ -161,7 +176,7 @@ export function ContactForm({
         }}
       >
         <div
-          className="riize-paper-gloss relative flex flex-1 flex-col overflow-hidden rounded-lg px-3.5 pb-9 pt-4"
+          className="textarea-container relative flex flex-1 flex-col overflow-hidden rounded-lg px-3.5 pb-9 pt-4"
           style={{
             background: "linear-gradient(180deg, #ffffff 0%, #fafdff 100%)",
             boxShadow:
@@ -169,14 +184,13 @@ export function ContactForm({
           }}
         >
           <textarea
-            id="riize-body"
             name="body"
             placeholder="Travaillons ensemble ! Écris ton message ici ~{><}..."
-            value={body}
-            onChange={(e) => onBodyChange(e.target.value)}
-            maxLength={maxBodyLength}
+            value={content}
+            onChange={(e) => onContentChange(e.target.value)}
+            maxLength={maxContentLength}
             required
-            className="riize-textarea relative z-[2] flex-1 min-h-0 block w-full resize-none border-none bg-transparent text-[19px] leading-[1.6] outline-none"
+            className="textarea relative z-[2] flex-1 min-h-0 block w-full resize-none border-none bg-transparent text-[19px] leading-[1.6] outline-none"
             style={{ ...pixelFont, color: "#2a4570" }}
           />
           <div
@@ -185,7 +199,7 @@ export function ContactForm({
           >
             <span>{dateStamp}</span>
             <span>
-              <span>{body.length}</span> / {maxBodyLength}
+              <span>{content.length}</span> / {maxContentLength}
             </span>
           </div>
         </div>
